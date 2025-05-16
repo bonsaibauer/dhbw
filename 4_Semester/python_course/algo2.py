@@ -4,6 +4,8 @@ import soundfile as sf
 import pyaudio
 import matplotlib.pyplot as plt
 
+# Algo 2
+
 def run(value, value2, fig, fileName, saveValue=None):
     # Audiodatei laden
     data, fs = sf.read(fileName)
