@@ -9,3 +9,4 @@ def run(value,value2,fig,a=None,b=None):
 if __name__ == '__main__':
     run(10,0,plt.figure())
     plt.show()
+    
