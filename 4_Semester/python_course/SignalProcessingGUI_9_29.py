@@ -109,14 +109,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         layout3.addWidget(self.sld2)
         layout3.addWidget(self.label2)
 
+        # Sound-Dateien aus /Sound UND dem aktuellen Verzeichnis laden
         self.combo = QComboBox(self)
         sound_dir = "Sound"
         if not os.path.exists(sound_dir):
             os.makedirs(sound_dir)
 
+        sound_files = set()
+
         for file in os.listdir(sound_dir):
             if file.endswith((".ogg", ".wav", ".mp3")):
-                self.combo.addItem(file)
+                sound_files.add(os.path.join(sound_dir, file))
+
+        for file in os.listdir("."):
+            if file.endswith((".ogg", ".wav", ".mp3")):
+                sound_files.add(file)
+
+        for file in sorted(sound_files):
+            self.combo.addItem(file)
 
         if self.config["fileIndex"] < 0 or self.config["fileIndex"] >= self.combo.count():
             self.config["fileIndex"] = 0
@@ -167,7 +177,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         script = str(self.comboScripts.currentText())
         value = self.sld.value()
         value2 = self.sld2.value()
-        fileName = os.path.join("Sound", self.combo.currentText())
+        fileName = self.combo.currentText()  # <-- Kein os.path.join mehr
         self.save()
 
         if script and (self.script != script or self.old_value != value or
@@ -229,10 +239,8 @@ QSlider::handle:horizontal:pressed {
 }
 """
 
-
 if __name__ == "__main__":
     qapp = QtWidgets.QApplication(sys.argv)
-
     app = ApplicationWindow()
     app.setStyle(QStyleFactory.create('Fusion'))
     app.setStyleSheet(QSS)
@@ -240,3 +248,4 @@ if __name__ == "__main__":
     app.activateWindow()
     app.raise_()
     qapp.exec()
+
